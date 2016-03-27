@@ -1,7 +1,7 @@
 var url = "https://www.freecodecamp.com/news/hot";
 
-var w = 750;
-var h = 450;
+var w = 850;
+var h = 550;
 
 function getDomain(link){
   if(link.indexOf('://') > -1){
@@ -53,7 +53,7 @@ $(document).ready(function(){
     
     var force = d3.layout.force()
       .charge(-120)
-      .linkDistance(30)
+      .linkDistance(50)
       .nodes(nodes)
       .links(links)
       .size([w,h])
@@ -74,11 +74,24 @@ $(document).ready(function(){
     var node = svg.selectAll(".node")
       .data(nodes)
       .enter()
-     .append("circle")
+     .append("g")
       .classed("node",true)
-      .attr("r",5)
-      .style("fill","black")
+      .classed("user",function(d){return d.type==="user"})
+      .classed("domain",function(d){return d.type==="domain"})
+      .attr("x",function(d){return d.x;})
+      .attr("y",function(d){return d.y;})
       .call(force.drag);
+    
+    svg.selectAll(".domain").append("circle")
+      .attr("r",function(d){return 5+d.count})
+      
+    
+    svg.selectAll(".user")
+      .append("svg:image")
+      .attr("width", 40)
+      .attr("height", 40)
+      .attr("transform","translate(-20,-20)")
+      .attr("xlink:href",function(d){return d.pic});
     
     force.on("tick",function(){
       link.attr("x1",function(d){return d.source.x})
@@ -87,6 +100,7 @@ $(document).ready(function(){
         .attr("y2",function(d){return d.target.y});
       node.attr("cx",function(d){return d.x})
         .attr("cy",function(d){return d.y});
+      svg.selectAll(".node").attr("transform",function(d){return "translate("+d.x+","+d.y+")"});
     })
   });
 });
