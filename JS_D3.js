@@ -37,8 +37,11 @@ $(document).ready(function(){
         nodes.push({type:"user",
                     name:post.author.username,
                     pic:post.author.picture,
-                    id:post.author.userId});
+                    id:post.author.userId,
+                    count:1});
         userIndex = nodes.length-1;
+      }else{
+        nodes[userIndex].count++;
       }
       if(domainIndex>-1){
         nodes[domainIndex].count++;
@@ -88,9 +91,9 @@ $(document).ready(function(){
     
     svg.selectAll(".user")
       .append("svg:image")
-      .attr("width", 40)
-      .attr("height", 40)
-      .attr("transform","translate(-20,-20)")
+      .attr("width", function(d){ return 30+(2*d.count)})
+      .attr("height", function(d){ return 30+(2*d.count)})
+      .attr("transform",function(d){return "translate(-"+(15+d.count)+",-"+(15+d.count)+")"})
       .attr("xlink:href",function(d){return d.pic});
     
     force.on("tick",function(){
