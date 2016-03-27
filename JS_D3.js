@@ -100,7 +100,19 @@ $(document).ready(function(){
         .attr("y2",function(d){return d.target.y});
       node.attr("cx",function(d){return d.x})
         .attr("cy",function(d){return d.y});
-      svg.selectAll(".node").attr("transform",function(d){return "translate("+d.x+","+d.y+")"});
+      svg.selectAll(".node").attr("transform", function(d){return "translate("+d.x+","+d.y+")"});
     })
+    
+    node.on("mouseover",function(d){
+      tooltip.style("left",d3.event.pageX+"px")
+        .style("top",d3.event.pageY+"px")
+        .classed("hide",false)
+        .text(d.type==="user" ? d.name : d.url);
+    });
+    node.on("mouseout",function(){
+      tooltip.classed("hide",true);
+    });
+    
+    var tooltip = d3.select("body").append("div").attr("class","tip hide");
   });
 });
